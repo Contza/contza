@@ -3,8 +3,23 @@
     "description": "Contza Javascript SDK.",
     "version": "1.0.0",
     "license": "MIT",
+    "keywords": [
+        "contza",
+        "cms",
+        "api",
+        "typescript"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Codetum/contza.git",
+        "directory": "packages/@contza-sdk"
+    },
+    "publishConfig": {
+        "access": "public"
+    },
     "scripts": {
-        "build": "tsc"
+        "build": "tsc",
+        "prepublishOnly": "yarn build"
     },
     "dependencies": {},
     "devDependencies": {

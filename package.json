@@ -1,13 +1,13 @@
 {
     "name": "contza",
-    "description": "Contza Description",
+    "description": "Contza public packages.",
     "version": "1.0.0",
     "private": true,
     "workspaces": [
         "packages/*"
     ],
     "scripts": {
-        "next": "yarn workspace next-playground"
+        "next-playground": "yarn workspace next-playground"
     },
     "devDependencies": {
         "prettier": "^2.7.1"
