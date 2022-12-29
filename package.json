@@ -1,0 +1,22 @@
+{
+    "name": "contza",
+    "description": "Contza Description",
+    "version": "1.0.0",
+    "private": true,
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "next": "yarn workspace next-playground"
+    },
+    "devDependencies": {
+        "prettier": "^2.7.1"
+    },
+    "prettier": {
+        "trailingComma": "es5",
+        "tabWidth": 4,
+        "semi": true,
+        "singleQuote": false,
+        "printWidth": 100
+    }
+}

@@ -1,0 +1,39 @@
+{
+    "name": "@contza/react",
+    "description": "Contza components for React.",
+    "version": "1.0.0",
+    "license": "MIT",
+    "scripts": {
+        "dev": "rollup -c --watch",
+        "build": "rollup -c"
+    },
+    "peerDependencies": {
+        "react": "^16 || ^17 || ^18"
+    },
+    "devDependencies": {
+        "@rollup/plugin-commonjs": "^22.0.2",
+        "@rollup/plugin-node-resolve": "^14.1.0",
+        "@rollup/plugin-typescript": "^8.5.0",
+        "@types/deep-equal": "^1.0.1",
+        "@types/lodash.get": "^4.4.7",
+        "@types/lodash.set": "^4.3.7",
+        "@types/react": "^18.0.0",
+        "react": "18.0.0",
+        "rollup": "^2.79.0",
+        "rollup-plugin-dts": "^4.2.2",
+        "rollup-plugin-postcss": "^4.0.2",
+        "typescript": "^4.8.3"
+    },
+    "main": "dist/cjs/index.js",
+    "module": "dist/esm/index.js",
+    "types": "dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
+    "dependencies": {
+        "deep-equal": "^2.0.5",
+        "html-react-parser": "^3.0.4",
+        "lodash.get": "^4.4.2",
+        "lodash.set": "^4.3.2"
+    }
+}

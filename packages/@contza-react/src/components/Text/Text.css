@@ -1,0 +1,10 @@
+.contza-text {
+    display: inherit;
+    outline: none;
+}
+
+.contza-text[contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    cursor: text;
+    pointer-events: none;
+}

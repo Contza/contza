@@ -1,0 +1,10 @@
+.contza-rich-text {
+    display: inherit;
+    outline: none;
+}
+
+.contza-rich-text[contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    cursor: text;
+    pointer-events: none;
+}
