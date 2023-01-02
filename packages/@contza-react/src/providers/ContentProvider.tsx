@@ -4,7 +4,6 @@ import {
     ContzaContentFieldType,
     ContzaEditorEvent,
 } from "../types";
-import { contzaUrl } from "../utils";
 import { useContza } from "./ContzaProvider";
 import { InteractionProvider } from "./InteractionProvider";
 import React, { useContext, useEffect, useState } from "react";
@@ -34,7 +33,7 @@ export const useContent = () => useContext(ContentContext);
 
 export const ContentProvider = (props: ContentProviderProps) => {
     const { children, content: initialContent } = props;
-    const { editMode, sendEditorEvent } = useContza();
+    const { editMode, sendEditorEvent, contzaUrl } = useContza();
 
     const [content, setContent] = useState<ContzaContent>(initialContent);
     const [fields, setFields] = useState<Record<string, any>>(initialContent.data ?? {});
@@ -68,11 +67,11 @@ export const ContentProvider = (props: ContentProviderProps) => {
         const event: ContzaEditorEvent = e.data;
 
         switch (event.type) {
-            case "onFieldsChange":
-                return setFields(event.data);
             case "onFieldChange":
                 const field = event.data;
                 return setField(field.path, field.type, field.value);
+            case "onFieldsChange":
+                return setFields(event.data);
             case "scrollToField":
                 const element = document.getElementById(`contza-${event.data.path.join(".")}`);
                 if (!element) return;

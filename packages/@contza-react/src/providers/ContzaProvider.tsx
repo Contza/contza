@@ -5,19 +5,20 @@ import React, { useCallback, useContext, useEffect, useState } from "react";
 interface ContzaContext {
     editMode: boolean;
     sendEditorEvent: (event: ContzaEditorEvent) => any;
+    contzaUrl: string;
 }
 
 export const ContzaContext = React.createContext<ContzaContext>({
     editMode: false,
     sendEditorEvent: () => {},
+    contzaUrl: contzaUrl,
 });
 
 export const useContza = () => useContext(ContzaContext);
 
 interface ContzaProviderProps {
     children: React.ReactNode;
-    // Contza URL is only used for development purposes
-    contzaUrl?: string;
+    contzaUrl?: string; // Contza URL is only used for development purposes
 }
 
 export const ContzaProvider = (props: ContzaProviderProps) => {
@@ -50,6 +51,7 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
             value={{
                 editMode,
                 sendEditorEvent,
+                contzaUrl: props.contzaUrl ?? contzaUrl,
             }}
         >
             {children}
