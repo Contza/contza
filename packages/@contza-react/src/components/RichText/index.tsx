@@ -40,6 +40,7 @@ const RichText = (props: RichTextProps) => {
     const { editMode } = useContza();
     const { value } = useContentField(fieldName, "richText");
 
+    if (!editMode && value === "") return <>{fieldName}</>;
     if (!editMode) return <RichTextRenderer content={value} components={components} />;
 
     return <EditableRichText name={fieldName} placeholder={placeholder} components={components} />;

@@ -24,7 +24,8 @@ const Text = (props: TextProps) => {
     const { editMode } = useContza();
     const { value } = useContentField(fieldName, "text");
 
-    if (!editMode) return <>{parseHtml(value ?? fieldName)}</>;
+    if (!editMode && value === "") return <>{fieldName}</>;
+    if (!editMode) return <>{parseHtml(value)}</>;
 
     return <EditableText name={fieldName} placeholder={placeholder} />;
 };
