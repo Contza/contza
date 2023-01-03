@@ -1,6 +1,6 @@
 import { useContza } from "../../providers/ContzaProvider";
 import { parseHtml } from "../../utils";
-import React from "react";
+import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
 
 export interface TextProps {

@@ -2,7 +2,7 @@ import { useContza } from "../../providers/ContzaProvider";
 import { useInteraction } from "../../providers/InteractionProvider";
 import "./Image.css";
 import { ImageProps } from "./index";
-import React from "react";
+import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
 
 export interface EditableImageProps extends Omit<ImageProps, "children"> {

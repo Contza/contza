@@ -1,4 +1,4 @@
-import React from "react";
+import * as React from "react";
 import { ListItemProvider, ListProvider, useList, useListItem } from "../../providers/ListProvider";
 import useContzaFields from "../../hooks/useContzaFields";
 

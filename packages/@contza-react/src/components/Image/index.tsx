@@ -1,6 +1,6 @@
 import { useContza } from "../../providers/ContzaProvider";
 import { ContzaImage } from "../../types";
-import React from "react";
+import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
 
 type ImageElementAttributes = Partial<React.HTMLAttributes<HTMLImageElement>>;

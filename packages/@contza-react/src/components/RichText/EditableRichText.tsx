@@ -1,7 +1,7 @@
 import { useInteraction } from "../../providers/InteractionProvider";
 import "./RichText.css";
 import { RichTextProps } from "./index";
-import React from "react";
+import * as React from "react";
 import RichTextRenderer from "./RichTextRenderer";
 import { useContza } from "../../providers/ContzaProvider";
 import useContzaFields from "../../hooks/useContzaFields";

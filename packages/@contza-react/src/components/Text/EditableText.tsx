@@ -1,7 +1,7 @@
 import { useInteraction } from "../../providers/InteractionProvider";
 import "./Text.css";
 import { TextProps } from "./index";
-import React from "react";
+import * as React from "react";
 import { useContza } from "../../providers/ContzaProvider";
 import useContzaFields from "../../hooks/useContzaFields";
 
