@@ -29,6 +29,7 @@ const useContzaFields = (): ContzaFields => {
 
     const registerField = (fieldName: string, type: ContzaContentFieldType, defaultValue?: any) => {
         const fieldPath: string[] = isInList ? [...listItem.path, fieldName] : [fieldName];
+
         defaultValue = defaultValue ?? defaultFieldValue[type];
 
         sendEditorEvent({

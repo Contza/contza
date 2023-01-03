@@ -33,7 +33,7 @@ const EditableText = (props: EditableTextProps) => {
                 resizeFocusBox(e.currentTarget);
                 sendEditorEvent({
                     type: "onFocus",
-                    data: { type: "text", path: path },
+                    data: { type: "text", path },
                 });
             }}
         />

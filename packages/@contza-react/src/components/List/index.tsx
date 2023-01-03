@@ -13,7 +13,7 @@ const List = (props: ListProps) => {
 
     const parentList = useList();
     const { registerField } = useContzaFields();
-    const { value } = registerField(name, "list");
+    const { value = [] } = registerField(name, "list");
 
     return (
         <ListProvider name={name} path={[...parentList.path, name]}>
