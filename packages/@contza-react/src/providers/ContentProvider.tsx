@@ -12,8 +12,6 @@ interface ContentContext {
     content?: ContzaContent;
     getField: (fieldPath: string[]) => ContzaContentField | undefined;
     setField: (fieldPath: string[], type: ContzaContentFieldType, value: any) => void;
-    fieldsSchema: Record<string, any>;
-    setFieldsSchema: React.Dispatch<React.SetStateAction<Record<string, any>>>;
 }
 
 interface ContentProviderProps {
@@ -25,8 +23,6 @@ export const ContentContext = React.createContext<ContentContext>({
     content: undefined,
     getField: () => undefined,
     setField: () => {},
-    fieldsSchema: {},
-    setFieldsSchema: () => undefined,
 });
 
 export const useContent = () => useContext(ContentContext);
@@ -37,11 +33,11 @@ export const ContentProvider = (props: ContentProviderProps) => {
 
     const [content, setContent] = useState<ContzaContent>(initialContent);
     const [fields, setFields] = useState<Record<string, any>>(initialContent.data ?? {});
-    const [fieldsSchema, setFieldsSchema] = useState<Record<string, any>>({});
 
     const getField = (fieldPath: string[]): ContzaContentField | undefined => {
         return fields[fieldPath.join(".")];
     };
+
     const setField = (fieldPath: string[], type: ContzaContentFieldType, value: any): void => {
         setFields((oldFields) => ({ ...oldFields, [fieldPath.join(".")]: { type, value } }));
     };
@@ -57,10 +53,6 @@ export const ContentProvider = (props: ContentProviderProps) => {
     useEffect(() => {
         sendEditorEvent({ type: "onFields", data: fields });
     }, [fields]);
-
-    useEffect(() => {
-        sendEditorEvent({ type: "onFieldsSchema", data: fieldsSchema });
-    }, [fieldsSchema]);
 
     const onEditorEvent = (e: MessageEvent) => {
         if (e.origin !== contzaUrl) return;
@@ -90,9 +82,7 @@ export const ContentProvider = (props: ContentProviderProps) => {
     }, [editMode]);
 
     return (
-        <ContentContext.Provider
-            value={{ content, getField, setField, fieldsSchema, setFieldsSchema }}
-        >
+        <ContentContext.Provider value={{ content, getField, setField }}>
             {editMode ? <InteractionProvider>{children}</InteractionProvider> : children}
         </ContentContext.Provider>
     );

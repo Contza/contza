@@ -1,7 +1,7 @@
-import useContentField from "../../hooks/useContentField";
 import { useContza } from "../../providers/ContzaProvider";
 import { parseHtml } from "../../utils";
 import React from "react";
+import useContzaFields from "../../hooks/useContzaFields";
 
 export interface TextProps {
     children?: string;
@@ -22,7 +22,9 @@ const Text = (props: TextProps) => {
     }
 
     const { editMode } = useContza();
-    const { value } = useContentField(fieldName, "text");
+    const { registerField } = useContzaFields();
+
+    const { value } = registerField(fieldName, "text", fieldName);
 
     if (!editMode && value === "") return <>{fieldName}</>;
     if (!editMode) return <>{parseHtml(value)}</>;

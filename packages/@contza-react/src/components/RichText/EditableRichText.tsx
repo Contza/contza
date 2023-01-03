@@ -1,10 +1,10 @@
-import useContentField from "../../hooks/useContentField";
 import { useInteraction } from "../../providers/InteractionProvider";
 import "./RichText.css";
 import { RichTextProps } from "./index";
 import React from "react";
 import RichTextRenderer from "./RichTextRenderer";
 import { useContza } from "../../providers/ContzaProvider";
+import useContzaFields from "../../hooks/useContzaFields";
 
 interface EditableRichTextProps extends RichTextProps {
     name: string;
@@ -14,8 +14,10 @@ const EditableRichText = (props: EditableRichTextProps) => {
     const { name, placeholder, components } = props;
 
     const { sendEditorEvent } = useContza();
-    const { value, path } = useContentField(name, "richText");
+    const { registerField } = useContzaFields();
     const { resizeFocusBox, hideFocusBox, resizeHoverBox, hideHoverBox } = useInteraction();
+
+    const { value, path } = registerField(name, "richText");
 
     return (
         <span

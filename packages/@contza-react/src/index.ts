@@ -10,6 +10,6 @@ export { default as ContzaImage } from "./components/Image";
 export { default as ContzaList } from "./components/List";
 
 // Hooks
-export { default as useContzaField } from "./hooks/useContzaField";
+export { default as useContzaFields } from "./hooks/useContzaFields";
 
 export * from "./types";

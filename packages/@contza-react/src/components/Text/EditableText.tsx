@@ -1,9 +1,9 @@
-import useContentField from "../../hooks/useContentField";
 import { useInteraction } from "../../providers/InteractionProvider";
 import "./Text.css";
 import { TextProps } from "./index";
 import React from "react";
 import { useContza } from "../../providers/ContzaProvider";
+import useContzaFields from "../../hooks/useContzaFields";
 
 interface EditableTextProps extends TextProps {
     name: string;
@@ -13,8 +13,10 @@ const EditableText = (props: EditableTextProps) => {
     const { name, placeholder } = props;
 
     const { sendEditorEvent } = useContza();
-    const { value, path } = useContentField(name, "text");
+    const { registerField } = useContzaFields();
     const { resizeFocusBox, hideFocusBox, resizeHoverBox, hideHoverBox } = useInteraction();
+
+    const { value, path } = registerField(name, "text");
 
     return (
         <span

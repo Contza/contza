@@ -1,6 +1,6 @@
-import useContentField from "../../hooks/useContentField";
-import { ListItemProvider, ListProvider, useList, useListItem } from "../../providers/ListProvider";
 import React from "react";
+import { ListItemProvider, ListProvider, useList, useListItem } from "../../providers/ListProvider";
+import useContzaFields from "../../hooks/useContzaFields";
 
 interface ListProps extends Omit<Partial<React.HTMLAttributes<HTMLElement>>, "children"> {
     name: string;
@@ -11,8 +11,9 @@ interface ListProps extends Omit<Partial<React.HTMLAttributes<HTMLElement>>, "ch
 const List = (props: ListProps) => {
     const { name, as: Element = React.Fragment, children, ...otherProps } = props;
 
-    const { value = [] } = useContentField(name, "list");
     const parentList = useList();
+    const { registerField } = useContzaFields();
+    const { value } = registerField(name, "list");
 
     return (
         <ListProvider name={name} path={[...parentList.path, name]}>

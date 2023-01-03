@@ -1,5 +1,11 @@
 import { contza } from "../../utils/contza";
-import { ContzaText, ContzaContent, ContentProvider, ContzaRichText } from "@contza/react";
+import {
+    ContzaText,
+    ContzaContent,
+    ContentProvider,
+    ContzaRichText,
+    useContzaFields,
+} from "@contza/react";
 import { GetServerSideProps, NextPage } from "next";
 
 const BlogPost: NextPage<{ content: ContzaContent }> = ({ content }) => {
@@ -10,6 +16,7 @@ const BlogPost: NextPage<{ content: ContzaContent }> = ({ content }) => {
                     <h1 className="text-5xl font-bold">
                         <ContzaText>Title</ContzaText>
                     </h1>
+                    <Test />
                 </div>
             </div>
             <div className="section py-20">
@@ -18,6 +25,18 @@ const BlogPost: NextPage<{ content: ContzaContent }> = ({ content }) => {
                 </div>
             </div>
         </ContentProvider>
+    );
+};
+
+const Test = () => {
+    const { text } = useContzaFields();
+
+    return (
+        <div>
+            <pre>
+                <code dangerouslySetInnerHTML={{ __html: text`Hello` }} />
+            </pre>
+        </div>
     );
 };
 

@@ -1,7 +1,7 @@
-import useContentField from "../../hooks/useContentField";
 import { useContza } from "../../providers/ContzaProvider";
 import { ContzaImage } from "../../types";
 import React from "react";
+import useContzaFields from "../../hooks/useContzaFields";
 
 type ImageElementAttributes = Partial<React.HTMLAttributes<HTMLImageElement>>;
 type ContzaImageElementAttributes = ImageElementAttributes & ContzaImage;
@@ -17,7 +17,8 @@ const Image = (props: ImageProps) => {
     const { name, children } = props;
 
     const { editMode } = useContza();
-    const { value } = useContentField(name, "image");
+    const { registerField } = useContzaFields();
+    const { value } = registerField(name, "image");
 
     const imageProps: ContzaImageElementAttributes = {
         ...(props as any),

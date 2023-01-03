@@ -1,9 +1,9 @@
-import useContentField from "../../hooks/useContentField";
 import { useContza } from "../../providers/ContzaProvider";
 import { useInteraction } from "../../providers/InteractionProvider";
 import "./Image.css";
 import { ImageProps } from "./index";
 import React from "react";
+import useContzaFields from "../../hooks/useContzaFields";
 
 export interface EditableImageProps extends Omit<ImageProps, "children"> {
     children: React.ReactNode;
@@ -12,7 +12,8 @@ export interface EditableImageProps extends Omit<ImageProps, "children"> {
 const EditableImage = (props: EditableImageProps) => {
     const { name, children } = props;
 
-    const { path } = useContentField(name, "image");
+    const { registerField } = useContzaFields();
+    const { path } = registerField(name, "image");
 
     const { sendEditorEvent } = useContza();
     const { resizeHoverBox, hideHoverBox } = useInteraction();

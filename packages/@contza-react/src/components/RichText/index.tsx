@@ -1,7 +1,7 @@
-import useContentField from "../../hooks/useContentField";
 import { useContza } from "../../providers/ContzaProvider";
 import React, { PropsWithChildren, ReactElement } from "react";
 import RichTextRenderer from "./RichTextRenderer";
+import useContzaFields from "../../hooks/useContzaFields";
 
 export interface RichTextProps {
     children?: string;
@@ -24,27 +24,6 @@ export interface RichTextComponents {
     img: (props: { src: string; alt: string }) => ReactElement;
     a: (props: { href: string; target: string } & PropsWithChildren) => ReactElement;
 }
-
-const EditableRichText = React.lazy(() => import("./EditableRichText"));
-
-const RichText = (props: RichTextProps) => {
-    const { children, name, components, placeholder = `Enter ${children ?? name}...` } = props;
-    const fieldName = children ?? name;
-
-    if (!fieldName) {
-        throw new Error(
-            "You must specify the name of the field by adding it to the 'children' or 'name' prop."
-        );
-    }
-
-    const { editMode } = useContza();
-    const { value } = useContentField(fieldName, "richText");
-
-    if (!editMode && value === "") return <>{fieldName}</>;
-    if (!editMode) return <RichTextRenderer content={value} components={components} />;
-
-    return <EditableRichText name={fieldName} placeholder={placeholder} components={components} />;
-};
 
 export const getRichText = (data: any, components: RichTextComponents) => {
     return (
@@ -151,6 +130,28 @@ export const getRichHtml = (data: any, initialComponents: Partial<RichTextCompon
 
         return React.cloneElement(element, { key: index });
     });
+};
+
+const EditableRichText = React.lazy(() => import("./EditableRichText"));
+
+const RichText = (props: RichTextProps) => {
+    const { children, name, components, placeholder = `Enter ${children ?? name}...` } = props;
+    const fieldName = children ?? name;
+
+    if (!fieldName) {
+        throw new Error(
+            "You must specify the name of the field by adding it to the 'children' or 'name' prop."
+        );
+    }
+
+    const { editMode } = useContza();
+    const { registerField } = useContzaFields();
+    const { value } = registerField(fieldName, "richText", fieldName);
+
+    if (!editMode && value === "") return <>{fieldName}</>;
+    if (!editMode) return <RichTextRenderer content={value} components={components} />;
+
+    return <EditableRichText name={fieldName} placeholder={placeholder} components={components} />;
 };
 
 export default RichText;
