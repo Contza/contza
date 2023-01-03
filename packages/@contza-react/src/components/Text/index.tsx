@@ -27,7 +27,7 @@ const Text = (props: TextProps) => {
 
     const { value } = registerField(fieldName, isRaw ? "rawText" : "text", fieldName);
 
-    if (!editMode && isRaw) return <>{value}</>;
+    if (!editMode && isRaw) return value;
     if (!editMode && value === "") return <>{fieldName}</>;
     if (!editMode) return <>{parseHtml(value)}</>;
 

@@ -16,6 +16,7 @@ const Home: NextPage<{ content: ContzaContent }> = ({ content }) => {
                         <p className="text-2xl">
                             <ContzaText>Heading description</ContzaText>
                         </p>
+                        <ContzaText isRaw={true}>Heading test</ContzaText>
                     </div>
                 </div>
                 <div className="section">
