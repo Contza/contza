@@ -7,12 +7,13 @@ export interface TextProps {
     children?: string;
     name?: string;
     placeholder?: string;
+    isRaw?: boolean;
 }
 
 const EditableText = React.lazy(() => import("./EditableText"));
 
 const Text = (props: TextProps) => {
-    const { children, name, placeholder = `Enter ${children ?? name}...` } = props;
+    const { children, name, placeholder = `Enter ${children ?? name}...`, isRaw = false } = props;
     const fieldName = children ?? name;
 
     if (!fieldName) {
@@ -24,12 +25,13 @@ const Text = (props: TextProps) => {
     const { editMode } = useContza();
     const { registerField } = useContzaFields();
 
-    const { value } = registerField(fieldName, "text", fieldName);
+    const { value } = registerField(fieldName, isRaw ? "rawText" : "text", fieldName);
 
+    if (!editMode && isRaw) return <>{value}</>;
     if (!editMode && value === "") return <>{fieldName}</>;
     if (!editMode) return <>{parseHtml(value)}</>;
 
-    return <EditableText name={fieldName} placeholder={placeholder} />;
+    return <EditableText name={fieldName} placeholder={placeholder} isRaw={isRaw} />;
 };
 
 export default Text;

@@ -12,6 +12,7 @@ interface ContzaFields {
         type: ContzaContentFieldType,
         defaultValue?: any
     ) => { value: any; path: string[] };
+    rawText: (name: FieldNameArgument) => string;
     text: (name: FieldNameArgument) => string;
     image: (name: FieldNameArgument) => ContzaImage;
 }
@@ -43,6 +44,10 @@ const useContzaFields = (): ContzaFields => {
         };
     };
 
+    const rawText = (argument: FieldNameArgument): string => {
+        return registerField(getFieldName(argument), "rawText")?.value;
+    };
+
     const text = (argument: FieldNameArgument): string => {
         return registerField(getFieldName(argument), "text")?.value;
     };
@@ -53,6 +58,7 @@ const useContzaFields = (): ContzaFields => {
 
     return {
         registerField,
+        rawText,
         text,
         image,
     };

@@ -10,20 +10,19 @@ interface EditableTextProps extends TextProps {
 }
 
 const EditableText = (props: EditableTextProps) => {
-    const { name, placeholder } = props;
+    const { name, placeholder, isRaw } = props;
 
     const { sendEditorEvent } = useContza();
     const { registerField } = useContzaFields();
     const { resizeFocusBox, hideFocusBox, resizeHoverBox, hideHoverBox } = useInteraction();
 
-    const { value, path } = registerField(name, "text");
+    const { value, path } = registerField(name, isRaw ? "rawText" : "text");
 
     return (
         <span
             id={`contza-${path.join(".")}`}
             contentEditable={true}
             suppressContentEditableWarning={true}
-            dangerouslySetInnerHTML={{ __html: value ?? "" }}
             className="contza-text"
             placeholder={placeholder}
             onMouseEnter={(e) => resizeHoverBox(e.currentTarget)}
@@ -36,6 +35,9 @@ const EditableText = (props: EditableTextProps) => {
                     data: { type: "text", path },
                 });
             }}
+            {...(isRaw
+                ? { children: value ?? "" }
+                : { dangerouslySetInnerHTML: { __html: value ?? "" } })}
         />
     );
 };
