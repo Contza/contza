@@ -3,7 +3,7 @@ import { ContzaImage } from "../../types";
 import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
 
-type ImageElementAttributes = Partial<React.HTMLAttributes<HTMLImageElement>>;
+type ImageElementAttributes = Omit<Partial<React.HTMLAttributes<HTMLImageElement>>, "children">;
 type ContzaImageElementAttributes = ImageElementAttributes & ContzaImage;
 
 export interface ImageProps extends Omit<ImageElementAttributes, "children"> {
@@ -22,8 +22,9 @@ const Image = (props: ImageProps) => {
 
     const imageProps: ContzaImageElementAttributes = {
         ...(props as any),
+        children: undefined,
         src: value?.src,
-        alt: value?.alt ?? "Contza image",
+        alt: value?.alt ?? "Image",
     };
 
     const imageElement = children ? children(imageProps) : <img {...imageProps} />;
