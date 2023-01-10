@@ -15,6 +15,9 @@ export default class ContzaSDK {
     private readonly defaultRequestHeaders: HeadersInit;
 
     constructor(websiteId: string, apiKey: string, options?: ContzaSDKOptions) {
+        if (!websiteId) throw "Contza - websiteId was not specified";
+        if (!apiKey) throw "Contza - apiKey was not specified";
+
         this.websiteId = websiteId;
         this.apiKey = apiKey;
         this.apiUrl = options?.contzaUrl ?? contzaApiUrl;
