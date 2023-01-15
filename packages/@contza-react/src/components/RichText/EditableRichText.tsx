@@ -5,6 +5,7 @@ import * as React from "react";
 import RichTextRenderer from "./RichTextRenderer";
 import { useContza } from "../../providers/ContzaProvider";
 import useContzaFields from "../../hooks/useContzaFields";
+import { useContent } from "../../providers/ContentProvider";
 
 interface EditableRichTextProps extends RichTextProps {
     name: string;
@@ -14,6 +15,7 @@ const EditableRichText = (props: EditableRichTextProps) => {
     const { name, placeholder, components } = props;
 
     const { sendEditorEvent } = useContza();
+    const { content } = useContent();
     const { registerField } = useContzaFields();
     const { resizeFocusBox, hideFocusBox, resizeHoverBox, hideHoverBox } = useInteraction();
 
@@ -33,6 +35,7 @@ const EditableRichText = (props: EditableRichTextProps) => {
                 resizeFocusBox(e.currentTarget);
                 sendEditorEvent({
                     type: "onFocus",
+                    contentEntryId: content?.id,
                     data: { type: "richText", path: path },
                 });
             }}

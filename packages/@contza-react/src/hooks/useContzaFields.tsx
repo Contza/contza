@@ -19,7 +19,7 @@ interface ContzaFields {
 
 const useContzaFields = (): ContzaFields => {
     const { sendEditorEvent } = useContza();
-    const { getField } = useContent();
+    const { getField, content } = useContent();
 
     const list = useList();
     const listItem = useListItem();
@@ -34,7 +34,8 @@ const useContzaFields = (): ContzaFields => {
         defaultValue = defaultValue ?? defaultFieldValue[type];
 
         sendEditorEvent({
-            type: "onFieldsSchema",
+            type: "onFieldSchema",
+            contentEntryId: content?.id,
             data: { [fieldPath.join(".")]: { type, value: defaultValue } },
         });
 

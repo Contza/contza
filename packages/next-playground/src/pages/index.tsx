@@ -4,9 +4,23 @@ import { GetServerSideProps, NextPage } from "next";
 import Link from "next/link";
 import { Fragment } from "react";
 
-const Home: NextPage<{ content: ContzaContent }> = ({ content }) => {
+const Home: NextPage<{ content: ContzaContent; navbar: ContzaContent }> = ({ content, navbar }) => {
     return (
         <ContentProvider content={content}>
+            <ContentProvider content={navbar}>
+                <div className="bg-black text-white font-medium text-lg">
+                    <div className="section">
+                        <div className="flex justify-center items-center space-x-4">
+                            <p>
+                                <ContzaText>Home</ContzaText>
+                            </p>
+                            <p>
+                                <ContzaText>Blog</ContzaText>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </ContentProvider>
             <div className="space-y-20 pb-20">
                 <div className="bg-black text-white">
                     <div className="section text-center py-40">
@@ -88,10 +102,12 @@ const Home: NextPage<{ content: ContzaContent }> = ({ content }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const locale = context.locale;
     const content = await contza.findOne("home", { locale });
+    const navbar = await contza.findOne("navbar", { locale });
 
     return {
         props: {
             content,
+            navbar,
         },
     };
 };

@@ -1,7 +1,8 @@
 export interface ContzaContent {
+    id: string;
     name: string;
-    originalSlug: string;
     slug: string;
+    path: string;
     locale: string;
     data: Record<string, any>;
     updatedAt: string;
@@ -22,5 +23,6 @@ export interface ContzaImage {
 
 export interface ContzaEditorEvent {
     type: string;
+    contentEntryId?: string;
     data: any;
 }

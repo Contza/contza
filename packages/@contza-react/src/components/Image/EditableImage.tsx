@@ -4,6 +4,7 @@ import "./Image.css";
 import { ImageProps } from "./index";
 import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
+import { useContent } from "../../providers/ContentProvider";
 
 export interface EditableImageProps extends Omit<ImageProps, "children"> {
     children: React.ReactNode;
@@ -16,6 +17,7 @@ const EditableImage = (props: EditableImageProps) => {
     const { path } = registerField(name, "image");
 
     const { sendEditorEvent } = useContza();
+    const { content } = useContent();
     const { resizeHoverBox, hideHoverBox } = useInteraction();
 
     return (
@@ -25,6 +27,7 @@ const EditableImage = (props: EditableImageProps) => {
             onClick={() => {
                 sendEditorEvent({
                     type: "onFocus",
+                    contentEntryId: content?.id,
                     data: { type: "image", path: path },
                 });
             }}

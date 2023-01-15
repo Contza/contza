@@ -4,6 +4,7 @@ import { TextProps } from "./index";
 import * as React from "react";
 import { useContza } from "../../providers/ContzaProvider";
 import useContzaFields from "../../hooks/useContzaFields";
+import { useContent } from "../../providers/ContentProvider";
 
 interface EditableTextProps extends TextProps {
     name: string;
@@ -13,6 +14,7 @@ const EditableText = (props: EditableTextProps) => {
     const { name, placeholder, isRaw } = props;
 
     const { sendEditorEvent } = useContza();
+    const { content } = useContent();
     const { registerField } = useContzaFields();
     const { resizeFocusBox, hideFocusBox, resizeHoverBox, hideHoverBox } = useInteraction();
 
@@ -32,6 +34,7 @@ const EditableText = (props: EditableTextProps) => {
                 resizeFocusBox(e.currentTarget);
                 sendEditorEvent({
                     type: "onFocus",
+                    contentEntryId: content?.id,
                     data: { type: "text", path },
                 });
             }}

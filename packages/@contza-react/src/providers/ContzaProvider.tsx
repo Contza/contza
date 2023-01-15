@@ -48,11 +48,7 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
 
     return (
         <ContzaContext.Provider
-            value={{
-                editMode,
-                sendEditorEvent,
-                contzaUrl: props.contzaUrl ?? contzaUrl,
-            }}
+            value={{ editMode, sendEditorEvent, contzaUrl: props.contzaUrl ?? contzaUrl }}
         >
             {children}
         </ContzaContext.Provider>

@@ -46,28 +46,34 @@ export const ContentProvider = (props: ContentProviderProps) => {
         if (!editMode) return;
 
         setContent(initialContent);
-        sendEditorEvent({ type: "onContent", data: initialContent });
+
         sendEditorEvent({ type: "onNavigation", data: { url: window.location.href.toString() } });
+        sendEditorEvent({
+            type: "onContent",
+            contentEntryId: initialContent.id,
+            data: initialContent,
+        });
     }, [initialContent, editMode]);
 
     useEffect(() => {
-        sendEditorEvent({ type: "onFields", data: fields });
-    }, [fields]);
+        sendEditorEvent({ type: "onFields", contentEntryId: content.id, data: fields });
+    }, [fields, content]);
 
     const onEditorEvent = (e: MessageEvent) => {
-        if (e.origin !== contzaUrl) return;
         const event: ContzaEditorEvent = e.data;
 
+        if (e.origin !== contzaUrl) return;
+        if (event.contentEntryId !== content.id) return;
+
         switch (event.type) {
-            case "onFieldChange":
+            case "onField":
                 const field = event.data;
                 return setField(field.path, field.type, field.value);
-            case "onFieldsChange":
+            case "onFields":
                 return setFields(event.data);
-            case "scrollToField":
+            case "moveToField":
                 const element = document.getElementById(`contza-${event.data.path.join(".")}`);
                 if (!element) return;
-
                 return window.scrollTo({
                     behavior: "smooth",
                     top: element.getBoundingClientRect().top + window.scrollY - 50,
