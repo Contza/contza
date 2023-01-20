@@ -31,7 +31,7 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
             if (!editMode) return;
             window.parent.postMessage(event, props.contzaUrl ?? contzaUrl);
         },
-        [editMode]
+        [editMode, props.contzaUrl]
     );
 
     // Listen for visual editor initalization
@@ -42,9 +42,12 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
 
         if (!editMode) return;
 
+        // Send onLoad editor event
+        window.parent.postMessage({ type: "onLoad" }, props.contzaUrl ?? contzaUrl);
+
         sessionStorage.setItem("contza-editmode", "true");
         setEditMode(true);
-    }, []);
+    }, [props.contzaUrl]);
 
     return (
         <ContzaContext.Provider
