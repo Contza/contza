@@ -11,4 +11,5 @@ export const defaultFieldValue: Record<ContzaContentFieldType, any> = {
     richText: "",
     image: { src: null, alt: null },
     list: [],
+    boolean: false,
 };

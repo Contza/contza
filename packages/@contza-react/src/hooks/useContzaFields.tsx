@@ -15,6 +15,7 @@ interface ContzaFields {
     rawText: (name: FieldNameArgument) => string;
     text: (name: FieldNameArgument) => string;
     image: (name: FieldNameArgument) => ContzaImage;
+    boolean: (name: FieldNameArgument) => boolean;
 }
 
 const useContzaFields = (): ContzaFields => {
@@ -46,15 +47,23 @@ const useContzaFields = (): ContzaFields => {
     };
 
     const rawText = (argument: FieldNameArgument): string => {
-        return registerField(getFieldName(argument), "rawText")?.value;
+        return (
+            registerField(getFieldName(argument), "rawText")?.value ?? defaultFieldValue["rawText"]
+        );
     };
 
     const text = (argument: FieldNameArgument): string => {
-        return registerField(getFieldName(argument), "text")?.value;
+        return registerField(getFieldName(argument), "text")?.value ?? defaultFieldValue["text"];
     };
 
     const image = (argument: FieldNameArgument): ContzaImage => {
-        return registerField(getFieldName(argument), "image")?.value;
+        return registerField(getFieldName(argument), "image")?.value ?? defaultFieldValue["image"];
+    };
+
+    const boolean = (argument: FieldNameArgument): boolean => {
+        return (
+            registerField(getFieldName(argument), "boolean")?.value ?? defaultFieldValue["boolean"]
+        );
     };
 
     return {
@@ -62,6 +71,7 @@ const useContzaFields = (): ContzaFields => {
         rawText,
         text,
         image,
+        boolean,
     };
 };
 

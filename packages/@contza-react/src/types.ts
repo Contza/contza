@@ -9,7 +9,7 @@ export interface ContzaContent {
     createdAt: string;
 }
 
-export type ContzaContentFieldType = "text" | "rawText" | "richText" | "image" | "list";
+export type ContzaContentFieldType = "text" | "rawText" | "richText" | "image" | "list" | "boolean";
 
 export interface ContzaContentField {
     type: ContzaContentFieldType;

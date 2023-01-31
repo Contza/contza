@@ -2,9 +2,11 @@ import * as React from "react";
 import { ListItemProvider, ListProvider, useList, useListItem } from "../../providers/ListProvider";
 import useContzaFields from "../../hooks/useContzaFields";
 
+type ListFunction = (listKey: string, index: number) => React.ReactNode | Element;
+
 interface ListProps extends Omit<Partial<React.HTMLAttributes<HTMLElement>>, "children"> {
     name: string;
-    children: React.ReactNode;
+    children: React.ReactNode | ListFunction;
     as?: keyof JSX.IntrinsicElements | React.ComponentType<any>;
 }
 
@@ -15,13 +17,15 @@ const List = (props: ListProps) => {
     const { registerField } = useContzaFields();
     const { value = [] } = registerField(name, "list");
 
+    const isFunction = children instanceof Function;
+
     return (
         <ListProvider name={name} path={[...parentList.path, name]}>
             <Element {...otherProps}>
-                {value.map((listKey: string) => {
+                {value.map((listKey: string, index: number) => {
                     return (
                         <ListItem key={listKey} listName={name} listKey={listKey}>
-                            {children}
+                            {isFunction ? (children(listKey, index) as React.ReactNode) : children}
                         </ListItem>
                     );
                 })}
