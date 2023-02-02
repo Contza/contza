@@ -1,4 +1,6 @@
 .contza-image {
     display: inherit;
     cursor: pointer;
+    height: 100%;
+    width: 100%;
 }
