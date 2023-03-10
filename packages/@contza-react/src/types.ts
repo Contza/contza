@@ -24,5 +24,6 @@ export interface ContzaImage {
 export interface ContzaEditorEvent {
     type: string;
     contentEntryId?: string;
+    url?: string;
     data: any;
 }

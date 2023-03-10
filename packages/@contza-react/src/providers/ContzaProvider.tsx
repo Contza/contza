@@ -29,7 +29,10 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
     const sendEditorEvent = useCallback(
         (event: ContzaEditorEvent) => {
             if (!editMode) return;
-            window.parent.postMessage(event, props.contzaUrl ?? contzaUrl);
+            window.parent.postMessage(
+                { url: window.location.href.toString(), ...event } as ContzaEditorEvent,
+                props.contzaUrl ?? contzaUrl
+            );
         },
         [editMode, props.contzaUrl]
     );

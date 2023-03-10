@@ -2,9 +2,27 @@ import { contza } from "../../utils/contza";
 import { ContzaText, ContzaContent, ContentProvider } from "@contza/react";
 import { GetServerSideProps, NextPage } from "next";
 
-const Blog: NextPage<{ content: ContzaContent; posts: ContzaContent[] }> = ({ content, posts }) => {
+const Blog: NextPage<{ content: ContzaContent; posts: ContzaContent[]; navbar: ContzaContent }> = ({
+    content,
+    posts,
+    navbar,
+}) => {
     return (
         <ContentProvider content={content}>
+            <ContentProvider content={navbar}>
+                <div className="bg-black text-white font-medium text-lg">
+                    <div className="section">
+                        <div className="flex justify-center items-center space-x-4">
+                            <p>
+                                <ContzaText>Home</ContzaText>
+                            </p>
+                            <p>
+                                <ContzaText>Blog</ContzaText>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </ContentProvider>
             <div className="bg-black text-white">
                 <div className="section text-center py-24">
                     <h1 className="text-5xl font-bold">
@@ -14,8 +32,8 @@ const Blog: NextPage<{ content: ContzaContent; posts: ContzaContent[] }> = ({ co
             </div>
             <div className="section py-20">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                    {posts.map((post) => (
-                        <div key={post.originalSlug}>
+                    {posts.map((post, index) => (
+                        <div key={index}>
                             <p>{post.name}</p>
                         </div>
                     ))}
@@ -29,11 +47,13 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     const locale = context.locale;
     const content = await contza.findOne("blog", { locale });
     const posts = await contza.findMany("blog", { locale });
+    const navbar = await contza.findOne("navbar", { locale });
 
     return {
         props: {
             content,
             posts,
+            navbar,
         },
     };
 };
