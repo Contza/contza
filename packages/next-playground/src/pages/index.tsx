@@ -38,9 +38,7 @@ const Home = ({ navbar }: { navbar: ContzaContent }) => {
                         <h1 className="text-5xl font-bold mb-8">
                             <ContzaText>Heading</ContzaText>
                         </h1>
-                        <p className="text-2xl">
-                            <ContzaText>Heading description</ContzaText>
-                        </p>
+                        <ContzaText>Heading description</ContzaText>
                         <ContzaText isRaw={true}>Heading test</ContzaText>
                     </div>
                 </div>

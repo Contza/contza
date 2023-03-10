@@ -48,12 +48,16 @@ const useContzaFields = (): ContzaFields => {
 
     const rawText = (argument: FieldNameArgument): string => {
         return (
-            registerField(getFieldName(argument), "rawText")?.value ?? defaultFieldValue["rawText"]
+            registerField(getFieldName(argument), "rawText")?.value?.toString() ??
+            defaultFieldValue["rawText"]
         );
     };
 
     const text = (argument: FieldNameArgument): string => {
-        return registerField(getFieldName(argument), "text")?.value ?? defaultFieldValue["text"];
+        return (
+            registerField(getFieldName(argument), "text")?.value?.toString() ??
+            defaultFieldValue["text"]
+        );
     };
 
     const image = (argument: FieldNameArgument): ContzaImage => {

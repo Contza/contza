@@ -18,7 +18,8 @@ const EditableText = (props: EditableTextProps) => {
     const { registerField } = useContzaFields();
     const { resizeFocusBox, hideFocusBox, resizeHoverBox, hideHoverBox } = useInteraction();
 
-    const { value, path } = registerField(name, isRaw ? "rawText" : "text");
+    let { value, path } = registerField(name, isRaw ? "rawText" : "text");
+    value = value?.toString();
 
     return (
         <span

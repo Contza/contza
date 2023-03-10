@@ -25,7 +25,8 @@ const Text = (props: TextProps) => {
     const { editMode } = useContza();
     const { registerField } = useContzaFields();
 
-    const { value } = registerField(fieldName, isRaw ? "rawText" : "text", fieldName);
+    let { value } = registerField(fieldName, isRaw ? "rawText" : "text", fieldName);
+    value = value?.toString();
 
     if (!editMode && isRaw) return value;
     if (!editMode && value === "") return <>{fieldName}</>;
