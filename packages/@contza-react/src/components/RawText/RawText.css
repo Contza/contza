@@ -1,0 +1,10 @@
+.contza-raw-text {
+    display: inherit;
+    outline: none;
+}
+
+.contza-raw-text[contenteditable=true]:empty:before {
+    content: attr(placeholder);
+    cursor: text;
+    pointer-events: none;
+}

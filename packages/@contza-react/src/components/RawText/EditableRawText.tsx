@@ -1,16 +1,16 @@
 import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
 import { useInteraction } from "../../providers/InteractionProvider";
+import { RawTextProps } from "./index";
 import { useContza } from "../../providers/ContzaProvider";
 import { useContent } from "../../providers/ContentProvider";
-import { TextProps } from "./index";
-import "./Text.css";
+import "./RawText.css";
 
-interface EditableTextProps extends TextProps {
+interface EditableTextProps extends RawTextProps {
     name: string;
 }
 
-const EditableText = (props: EditableTextProps) => {
+const EditableRawText = (props: EditableTextProps) => {
     const { name, placeholder } = props;
 
     const { sendEditorEvent } = useContza();
@@ -18,16 +18,16 @@ const EditableText = (props: EditableTextProps) => {
     const { registerField } = useContzaFields();
     const { resizeFocusBox, hideFocusBox, resizeHoverBox, hideHoverBox } = useInteraction();
 
-    let { value, path } = registerField(name, "text");
+    let { value, path } = registerField(name, "rawText");
     value = value?.toString();
 
     return (
         <span
             id={`contza-${path.join(".")}`}
-            dangerouslySetInnerHTML={{ __html: value ?? "" }}
+            children={value ?? ""}
             contentEditable={true}
             suppressContentEditableWarning={true}
-            className="contza-text"
+            className="contza-raw-text"
             placeholder={placeholder}
             onMouseEnter={(e) => resizeHoverBox(e.currentTarget)}
             onMouseLeave={() => hideHoverBox()}
@@ -44,4 +44,4 @@ const EditableText = (props: EditableTextProps) => {
     );
 };
 
-export default EditableText;
+export default EditableRawText;
