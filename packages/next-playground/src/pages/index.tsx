@@ -18,7 +18,7 @@ const Home = ({ navbar }: { navbar: ContzaContent }) => {
 
     return (
         <>
-            <ContentProvider content={navbar}>
+            <ContentProvider initialContent={navbar}>
                 <div className="bg-black text-white font-medium text-lg">
                     <div className="section">
                         <div className="flex justify-center items-center space-x-4">
@@ -117,7 +117,7 @@ export default function Page({
     navbar: ContzaContent;
 }) {
     return (
-        <ContentProvider content={content}>
+        <ContentProvider initialContent={content}>
             <Home navbar={navbar} />
         </ContentProvider>
     );

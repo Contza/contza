@@ -8,8 +8,8 @@ const Blog: NextPage<{ content: ContzaContent; posts: ContzaContent[]; navbar: C
     navbar,
 }) => {
     return (
-        <ContentProvider content={content}>
-            <ContentProvider content={navbar}>
+        <ContentProvider initialContent={content}>
+            <ContentProvider initialContent={navbar}>
                 <div className="bg-black text-white font-medium text-lg">
                     <div className="section">
                         <div className="flex justify-center items-center space-x-4">

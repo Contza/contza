@@ -10,7 +10,7 @@ import { GetServerSideProps, NextPage } from "next";
 
 const BlogPost: NextPage<{ content: ContzaContent }> = ({ content }) => {
     return (
-        <ContentProvider content={content}>
+        <ContentProvider initialContent={content}>
             <div className="bg-black text-white">
                 <div className="section text-center py-24">
                     <h1 className="text-5xl font-bold">

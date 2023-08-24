@@ -15,8 +15,8 @@ export default class ContzaSDK {
     private readonly defaultRequestHeaders: HeadersInit;
 
     constructor(websiteId: string, apiKey: string, options?: ContzaSDKOptions) {
-        if (!websiteId) throw "Contza - websiteId was not specified";
-        if (!apiKey) throw "Contza - apiKey was not specified";
+        if (!websiteId) throw "@contza/sdk - websiteId was not specified";
+        if (!apiKey) throw "@contza/sdk - apiKey was not specified";
 
         this.websiteId = websiteId;
         this.apiKey = apiKey;
@@ -37,7 +37,7 @@ export default class ContzaSDK {
         const data = await response.json();
 
         if (!response.ok) {
-            throw "Contza - " + (data.message ?? "Unknown error occurred");
+            throw "@contza/sdk - " + (data.message ?? "Unknown error occurred");
         }
 
         return data;

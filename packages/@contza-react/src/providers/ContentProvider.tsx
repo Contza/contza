@@ -6,17 +6,12 @@ import {
 } from "../types";
 import { useContza } from "./ContzaProvider";
 import { InteractionProvider } from "./InteractionProvider";
-import React, { useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 
 interface ContentContext {
     content?: ContzaContent;
     getField: (fieldPath: string[]) => ContzaContentField | undefined;
     setField: (fieldPath: string[], type: ContzaContentFieldType, value: any) => void;
-}
-
-interface ContentProviderProps {
-    children: React.ReactNode;
-    content: ContzaContent;
 }
 
 export const ContentContext = React.createContext<ContentContext>({
@@ -25,14 +20,22 @@ export const ContentContext = React.createContext<ContentContext>({
     setField: () => {},
 });
 
+interface ContentProviderProps {
+    name: string;
+    initialContent?: ContzaContent;
+    children: React.ReactNode;
+}
+
 export const useContent = () => useContext(ContentContext);
 
 export const ContentProvider = (props: ContentProviderProps) => {
-    const { children, content: initialContent } = props;
-    const { editMode, sendEditorEvent, contzaUrl } = useContza();
+    const contzaContext = useContza();
 
-    const [content, setContent] = useState<ContzaContent>(initialContent);
-    const [fields, setFields] = useState<Record<string, any>>(initialContent.data ?? {});
+    const defaultContent: ContzaContent | undefined =
+        props.initialContent ?? contzaContext.initialContents?.[props.name];
+
+    const [content, setContent] = useState<ContzaContent | undefined>(defaultContent);
+    const [fields, setFields] = useState<Record<string, any>>(defaultContent.data ?? {});
 
     const getField = (fieldPath: string[]): ContzaContentField | undefined => {
         return fields[fieldPath.join(".")];
@@ -42,27 +45,41 @@ export const ContentProvider = (props: ContentProviderProps) => {
         setFields((oldFields) => ({ ...oldFields, [fieldPath.join(".")]: { type, value } }));
     };
 
+    // Fetch content from API if the default content is not defined
     useEffect(() => {
-        if (!editMode) return;
+        if (!defaultContent) {
+            setContent(contentFromApi);
+        }
+    }, [defaultContent]);
 
-        setContent(initialContent);
+    useEffect(() => {
+        if (!contzaContext.editMode) return;
 
-        sendEditorEvent({ type: "onNavigation", data: { url: window.location.href.toString() } });
-        sendEditorEvent({
-            type: "onContent",
-            contentEntryId: initialContent.id,
-            data: initialContent,
+        setContent(defaultContent);
+
+        contzaContext.sendEditorEvent({
+            type: "onNavigation",
+            data: { url: window.location.href.toString() },
         });
-    }, [initialContent, editMode]);
+        contzaContext.sendEditorEvent({
+            type: "onContent",
+            contentEntryId: defaultContent.id,
+            data: defaultContent,
+        });
+    }, [defaultContent, contzaContext.editMode]);
 
     useEffect(() => {
-        sendEditorEvent({ type: "onFields", contentEntryId: content.id, data: fields });
-    }, [fields, content]);
+        contzaContext.sendEditorEvent({
+            type: "onFields",
+            contentEntryId: content.id,
+            data: fields,
+        });
+    }, [fields, content, contzaContext]);
 
-    const onEditorEvent = (e: MessageEvent) => {
+    const onEditorEvent = useCallback((e: MessageEvent) => {
         const event: ContzaEditorEvent = e.data;
 
-        if (e.origin !== contzaUrl) return;
+        if (e.origin !== contzaContext.contzaUrl) return;
         if (event.contentEntryId !== content.id) return;
 
         switch (event.type) {
@@ -79,17 +96,21 @@ export const ContentProvider = (props: ContentProviderProps) => {
                     top: element.getBoundingClientRect().top + window.scrollY - 50,
                 });
         }
-    };
+    }, []);
 
     // Listen for visual editor edvents
     useEffect(() => {
         addEventListener("message", onEditorEvent);
         return () => removeEventListener("message", onEditorEvent);
-    }, [editMode]);
+    }, [onEditorEvent]);
 
     return (
         <ContentContext.Provider value={{ content, getField, setField }}>
-            {editMode ? <InteractionProvider>{children}</InteractionProvider> : children}
+            {contzaContext.editMode ? (
+                <InteractionProvider>{props.children}</InteractionProvider>
+            ) : (
+                props.children
+            )}
         </ContentContext.Provider>
     );
 };
