@@ -27,8 +27,10 @@ export const ContentProvider = (props: ContentProviderProps) => {
     // Find defaultContent from prop or from contzaContext initialContents
     const defaultContent: ContzaContent | undefined =
         props.initialContent ??
-        contzaContext.initialContents.find(
-            (content) => content.slug === props.slug && content.locale === props.locale
+        contzaContext.initialContents.find((content) =>
+            content.path === props.slug && content.locale === props.locale && props.locale
+                ? content.locale === props.locale
+                : true
         );
 
     // Define content locale

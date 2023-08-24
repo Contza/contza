@@ -65,6 +65,7 @@ export class ContzaClient {
         const endpoint = `${basePath}/${formatSlug(slug)}?${parameters.toString()}`;
 
         const contents = await this.request<ContzaContent[]>(endpoint);
+
         return contents ?? [];
     }
 }

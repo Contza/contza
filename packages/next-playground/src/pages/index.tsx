@@ -90,7 +90,7 @@ const Home = () => {
     );
 };
 
-export default function Page({ content }: { content: ContzaContent }) {
+export default function Page() {
     return (
         <ContentProvider slug="home">
             <Home />
@@ -99,8 +99,6 @@ export default function Page({ content }: { content: ContzaContent }) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const locale = context.locale;
-
     return {
         props: {},
     };
