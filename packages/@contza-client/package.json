@@ -1,18 +1,19 @@
 {
-    "name": "@contza/sdk",
-    "description": "Contza Javascript SDK.",
+    "name": "@contza/client",
+    "description": "Contza Javascript client.",
     "version": "1.0.1",
-    "license": "MIT",
+    "license": "Apache-2.0",
     "keywords": [
         "contza",
         "cms",
         "api",
-        "typescript"
+        "typescript",
+        "client"
     ],
     "repository": {
         "type": "git",
         "url": "git+https://github.com/Codetum/contza.git",
-        "directory": "packages/@contza-sdk"
+        "directory": "packages/@contza-client"
     },
     "publishConfig": {
         "access": "public"

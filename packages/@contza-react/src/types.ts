@@ -1,13 +1,4 @@
-export interface ContzaContent {
-    id: string;
-    name: string;
-    slug: string;
-    path: string;
-    locale: string;
-    data: Record<string, any>;
-    updatedAt: string;
-    createdAt: string;
-}
+export { ContzaContent } from "@contza/client";
 
 export type ContzaContentFieldType = "text" | "rawText" | "richText" | "image" | "list" | "boolean";
 

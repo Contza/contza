@@ -1,12 +1,8 @@
-import {
-    ContzaContent,
-    ContzaContentField,
-    ContzaContentFieldType,
-    ContzaEditorEvent,
-} from "../types";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { useContza } from "./ContzaProvider";
 import { InteractionProvider } from "./InteractionProvider";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import { ContzaContentField, ContzaContentFieldType, ContzaEditorEvent } from "../types";
+import { ContzaContent } from "@contza/client";
 
 interface ContentContext {
     content?: ContzaContent;
@@ -14,14 +10,11 @@ interface ContentContext {
     setField: (fieldPath: string[], type: ContzaContentFieldType, value: any) => void;
 }
 
-export const ContentContext = React.createContext<ContentContext>({
-    content: undefined,
-    getField: () => undefined,
-    setField: () => {},
-});
+export const ContentContext = React.createContext<ContentContext>({} as ContentContext);
 
 interface ContentProviderProps {
-    name: string;
+    slug: string;
+    locale?: string;
     initialContent?: ContzaContent;
     children: React.ReactNode;
 }
@@ -31,11 +24,23 @@ export const useContent = () => useContext(ContentContext);
 export const ContentProvider = (props: ContentProviderProps) => {
     const contzaContext = useContza();
 
+    // Find defaultContent from prop or from contzaContext initialContents
     const defaultContent: ContzaContent | undefined =
-        props.initialContent ?? contzaContext.initialContents?.[props.name];
+        props.initialContent ??
+        contzaContext.initialContents.find(
+            (content) => content.slug === props.slug && content.locale === props.locale
+        );
+
+    // Define content locale
+    const locale = props.locale ?? defaultContent?.locale;
+
+    // Throw an error if the prop and default content locales do not match
+    if (!!props.locale && !!defaultContent && props.locale !== defaultContent.locale) {
+        throw `@contza/client - <ContentProvider slug="${props.slug}" /> 'locale' prop should match as the initial content's locale.`;
+    }
 
     const [content, setContent] = useState<ContzaContent | undefined>(defaultContent);
-    const [fields, setFields] = useState<Record<string, any>>(defaultContent.data ?? {});
+    const [fields, setFields] = useState<Record<string, any>>(defaultContent?.data ?? {});
 
     const getField = (fieldPath: string[]): ContzaContentField | undefined => {
         return fields[fieldPath.join(".")];
@@ -45,30 +50,50 @@ export const ContentProvider = (props: ContentProviderProps) => {
         setFields((oldFields) => ({ ...oldFields, [fieldPath.join(".")]: { type, value } }));
     };
 
+    // Function for sending initial editor events.
+    const sendInitialEditorEvents = useCallback(
+        (content: ContzaContent) => {
+            contzaContext.sendEditorEvent({
+                type: "onNavigation",
+                data: { url: window.location.href.toString() },
+            });
+            contzaContext.sendEditorEvent({
+                type: "onContent",
+                contentEntryId: content.id,
+                data: content,
+            });
+        },
+        [contzaContext]
+    );
+
     // Fetch content from API if the default content is not defined
     useEffect(() => {
         if (!defaultContent) {
-            setContent(contentFromApi);
+            contzaContext.contzaClient.findOne(props.slug, { locale }).then((content) => {
+                setContent(content);
+                setFields(content.data);
+                sendInitialEditorEvents(content);
+            });
         }
-    }, [defaultContent]);
+    }, [contzaContext.contzaClient, defaultContent, locale, props.slug, sendInitialEditorEvents]);
 
+    // Handle defaultContent changes
     useEffect(() => {
+        // Do nothing, if the user is not in edit mode
         if (!contzaContext.editMode) return;
 
+        // Do nothing, if the defaultContent is empt
+        if (!defaultContent) return;
+
+        // Update the content state and send initial editor events
         setContent(defaultContent);
+        sendInitialEditorEvents(defaultContent);
+    }, [defaultContent, contzaContext.editMode, contzaContext, sendInitialEditorEvents]);
 
-        contzaContext.sendEditorEvent({
-            type: "onNavigation",
-            data: { url: window.location.href.toString() },
-        });
-        contzaContext.sendEditorEvent({
-            type: "onContent",
-            contentEntryId: defaultContent.id,
-            data: defaultContent,
-        });
-    }, [defaultContent, contzaContext.editMode]);
-
+    // Send onFields editor event when ever field or content is updated
     useEffect(() => {
+        if (!content) return;
+
         contzaContext.sendEditorEvent({
             type: "onFields",
             contentEntryId: content.id,
@@ -76,27 +101,36 @@ export const ContentProvider = (props: ContentProviderProps) => {
         });
     }, [fields, content, contzaContext]);
 
-    const onEditorEvent = useCallback((e: MessageEvent) => {
-        const event: ContzaEditorEvent = e.data;
+    const onEditorEvent = useCallback(
+        (e: MessageEvent) => {
+            const event: ContzaEditorEvent = e.data;
 
-        if (e.origin !== contzaContext.contzaUrl) return;
-        if (event.contentEntryId !== content.id) return;
+            // Do not receive any editor events when content is not defined
+            if (!content) return;
 
-        switch (event.type) {
-            case "onField":
-                const field = event.data;
-                return setField(field.path, field.type, field.value);
-            case "onFields":
-                return setFields(event.data);
-            case "moveToField":
-                const element = document.getElementById(`contza-${event.data.path.join(".")}`);
-                if (!element) return;
-                return window.scrollTo({
-                    behavior: "smooth",
-                    top: element.getBoundingClientRect().top + window.scrollY - 50,
-                });
-        }
-    }, []);
+            // Make sure the messages is coming from correct url
+            if (e.origin !== contzaContext.contzaUrl) return;
+
+            // Make sure the message is related to the content defined in this component's state
+            if (event.contentEntryId !== content.id) return;
+
+            switch (event.type) {
+                case "onField":
+                    const field = event.data;
+                    return setField(field.path, field.type, field.value);
+                case "onFields":
+                    return setFields(event.data);
+                case "moveToField":
+                    const element = document.getElementById(`contza-${event.data.path.join(".")}`);
+                    if (!element) return;
+                    return window.scrollTo({
+                        behavior: "smooth",
+                        top: element.getBoundingClientRect().top + window.scrollY - 50,
+                    });
+            }
+        },
+        [content, contzaContext.contzaUrl]
+    );
 
     // Listen for visual editor edvents
     useEffect(() => {

@@ -6,18 +6,18 @@
         "dev": "next dev",
         "build": "next build",
         "start": "next start",
-        "predev": "yarn workspace @contza/react build && yarn workspace @contza/sdk build",
-        "prebuild": "yarn workspace @contza/react build && yarn workspace @contza/sdk build"
+        "predev": "yarn workspace @contza/client build && yarn workspace @contza/react build",
+        "prebuild": "yarn workspace @contza/client build && yarn workspace @contza/react build"
     },
     "dependencies": {
         "@contza/react": "*",
-        "@contza/sdk": "*",
-        "@tailwindcss/typography": "^0.5.8",
+        "@contza/client": "*",
         "next": "12.3.0",
         "react": "18.2.0",
         "react-dom": "18.2.0"
     },
     "devDependencies": {
+        "@tailwindcss/typography": "^0.5.8",
         "@types/node": "18.7.18",
         "@types/react": "18.0.20",
         "@types/react-dom": "18.0.6",

@@ -1,10 +1,10 @@
-import { contza } from "../../utils/contza";
+import { contzaClient } from "../../utils/contzaClient";
 import {
     ContzaText,
-    ContzaContent,
     ContentProvider,
     ContzaRichText,
     useContzaFields,
+    ContzaContent,
 } from "@contza/react";
 import { GetServerSideProps, NextPage } from "next";
 
@@ -43,7 +43,7 @@ const Test = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const locale = context.locale;
     const slug = context.params?.slug as string;
-    const content = await contza.findOne(`blog/${slug}`, { locale });
+    const content = await contzaClient.findOne(`blog/${slug}`, { locale });
 
     return {
         props: {

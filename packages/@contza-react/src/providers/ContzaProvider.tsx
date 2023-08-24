@@ -1,12 +1,13 @@
-import { ContzaContent, ContzaEditorEvent } from "../types";
-import { CONTZA_PRODUCTION_API_URL, CONTZA_PRODUCTION_URL } from "../utils";
-import React, { useCallback, useContext, useEffect, useState } from "react";
+import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import { ContzaClient, ContzaContent } from "@contza/client";
+import { CONTZA_PRODUCTION_URL } from "../utils";
+import { ContzaEditorEvent } from "../types";
 
 interface ContzaContext {
     editMode: boolean;
     sendEditorEvent: (event: ContzaEditorEvent) => any;
-    sendApiRequest: (endpoint: string) => Promise<any>;
-    initialContents: Record<string, ContzaContent>;
+    initialContents: ContzaContent[];
+    contzaClient: ContzaClient;
     contzaUrl: string;
 }
 
@@ -23,7 +24,7 @@ interface ContzaProviderProps {
     websiteId: string;
 
     // Initial contents are shared down to ContentProvider components
-    initialContents?: Record<string, ContzaContent>;
+    initialContents?: ContzaContent[];
 
     // Contza URL is only used for development purposes
     contzaUrl?: string;
@@ -33,6 +34,12 @@ interface ContzaProviderProps {
 export const ContzaProvider = (props: ContzaProviderProps) => {
     // Determine the Contza URL
     const contzaUrl = props.contzaUrl ?? CONTZA_PRODUCTION_URL;
+
+    // Store initialized ContzaClient to a reference.
+    // The API handles the requests differently when the apiKey is "client"
+    const contzaClient = useRef<ContzaClient>(
+        new ContzaClient(props.websiteId, "client", { contzaUrl })
+    );
 
     // State to track edit mode
     const [editMode, setEditMode] = useState<boolean>(false);
@@ -48,30 +55,6 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
         },
         [contzaUrl, editMode]
     );
-
-    // Function to send an api request to the Contza API
-    const sendApiRequest = useCallback(async (endpoint: string) => {
-        const response = await fetch(CONTZA_PRODUCTION_API_URL + endpoint, {
-            method: "GET",
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-        });
-
-        const data = await response.json();
-
-        if (!response.ok) {
-            throw new Error("@contza/react - " + (data.message ?? "Unknown error occurred"));
-        }
-
-        return data;
-    }, []);
-
-    // Function to get a content from database
-    const getContentFromApi = useCallback(() => {
-        sendApiRequest(`/website/${props.websiteId}/content`);
-    }, []);
 
     // Listen for visual editor initialization
     useEffect(() => {
@@ -95,8 +78,8 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
             value={{
                 editMode,
                 sendEditorEvent,
-                sendApiRequest,
-                initialContents: props.initialContents ?? {},
+                initialContents: props.initialContents ?? [],
+                contzaClient: contzaClient.current,
                 contzaUrl,
             }}
         >
