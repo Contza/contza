@@ -1,7 +1,5 @@
-import { contzaClient } from "../utils/contzaClient";
 import {
     ContentProvider,
-    ContzaContent,
     ContzaImage,
     ContzaList,
     ContzaText,

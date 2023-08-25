@@ -16,8 +16,11 @@
     },
     "plugins": ["@typescript-eslint", "react"],
     "rules": {
-        "no-case-declarations": "off",
         "@typescript-eslint/no-explicit-any": "off",
-        "react/no-children-prop": "off"
+        "prefer-const": "off",
+        "no-case-declarations": "off",
+        "react/no-children-prop": "off",
+        "react/prop-types": "off",
+        "react/display-name": "off"
     }
 }

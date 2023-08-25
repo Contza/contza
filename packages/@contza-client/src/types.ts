@@ -15,7 +15,6 @@ export interface ContzaContent {
     id: string;
     name: string;
     slug: string;
-    path: string;
     locale: string;
     data: Record<string, any>;
     updatedAt: string;

@@ -8,6 +8,8 @@
         "packages/*"
     ],
     "scripts": {
+        "build:client": "yarn workspace @contza/client build",
+        "build:react": "yarn build:client && yarn workspace @contza/react build",
         "next-playground": "yarn workspace next-playground"
     },
     "devDependencies": {
