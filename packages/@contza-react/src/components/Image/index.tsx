@@ -1,14 +1,14 @@
-import { useContza } from "../../providers/ContzaProvider";
-import { ContzaImage } from "../../types";
 import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
+import { useContza } from "../../providers/ContzaProvider";
+import { ContzaImage } from "../../types";
 
-type ImageElementAttributes = Omit<Partial<React.HTMLAttributes<HTMLImageElement>>, "children">;
-type ContzaImageElementAttributes = ImageElementAttributes & ContzaImage;
+type ImageElementAttributes = Omit<Partial<React.ImgHTMLAttributes<HTMLImageElement>>, "children">;
+type ContzaImageProps = ImageElementAttributes & ContzaImage;
 
-export interface ImageProps extends Omit<ImageElementAttributes, "children"> {
+export interface ImageProps extends ImageElementAttributes {
     name: string;
-    children?: (image: ContzaImageElementAttributes) => JSX.Element;
+    children?: (image: ContzaImageProps) => JSX.Element;
 }
 
 const EditableImage = React.lazy(() => import("./EditableImage"));
@@ -20,7 +20,7 @@ const Image = (props: ImageProps) => {
     const { registerField } = useContzaFields();
     const { value } = registerField(name, "image");
 
-    const imageProps: ContzaImageElementAttributes = {
+    const imageProps: ContzaImageProps = {
         ...(props as any),
         children: undefined,
         src: value?.src,
