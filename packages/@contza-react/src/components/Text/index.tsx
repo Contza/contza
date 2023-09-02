@@ -12,13 +12,11 @@ export interface TextProps {
 const EditableText = React.lazy(() => import("./EditableText"));
 
 const Text = (props: TextProps) => {
-    const { children, name, placeholder = `Enter ${children ?? name}...`} = props;
+    const { children, name, placeholder = `Enter ${children ?? name}...` } = props;
     const fieldName = children ?? name;
 
     if (!fieldName) {
-        throw new Error(
-            "You must specify the name of the field by adding it to the 'children' or 'name' prop."
-        );
+        throw "You must specify the name of the field by adding it to the 'children' or 'name' prop.";
     }
 
     const { editMode } = useContza();
