@@ -28,7 +28,7 @@ export const ContentProvider = (props: ContentProviderProps) => {
     const defaultContent: ContzaContent | undefined =
         props.initialContent ??
         contzaContext.initialContents.find((content) =>
-            content.path === props.slug && content.locale === props.locale && props.locale
+            content.slug === props.slug && content.locale === props.locale && props.locale
                 ? content.locale === props.locale
                 : true
         );
@@ -38,7 +38,7 @@ export const ContentProvider = (props: ContentProviderProps) => {
 
     // Throw an error if the prop and default content locales do not match
     if (!!props.locale && !!defaultContent && props.locale !== defaultContent.locale) {
-        throw `@contza/client - <ContentProvider slug="${props.slug}" /> 'locale' prop should match as the initial content's locale.`;
+        throw `@contza/react - <ContentProvider slug="${props.slug}" /> 'locale' prop should match as the initial content's locale.`;
     }
 
     const [content, setContent] = useState<ContzaContent | undefined>(defaultContent);
@@ -68,16 +68,31 @@ export const ContentProvider = (props: ContentProviderProps) => {
         [contzaContext]
     );
 
-    // Fetch content from API if the default content is not defined
+    const getContentFromApi = useCallback(() => {
+        contzaContext.contzaClient.findOne(props.slug, { locale }).then((content) => {
+            setContent(content);
+            setFields(content.data);
+            sendInitialEditorEvents(content);
+        });
+    }, [contzaContext.contzaClient, locale, props.slug, sendInitialEditorEvents]);
+
+    // Fetch content from API if the user is on edit mode or the default content is not defined
     useEffect(() => {
-        if (!defaultContent) {
+        if (contzaContext.editMode || !defaultContent) {
             contzaContext.contzaClient.findOne(props.slug, { locale }).then((content) => {
                 setContent(content);
                 setFields(content.data);
                 sendInitialEditorEvents(content);
             });
         }
-    }, [contzaContext.contzaClient, defaultContent, locale, props.slug, sendInitialEditorEvents]);
+    }, [
+        contzaContext.contzaClient,
+        contzaContext.editMode,
+        defaultContent,
+        locale,
+        props.slug,
+        sendInitialEditorEvents,
+    ]);
 
     // Handle defaultContent changes
     useEffect(() => {
