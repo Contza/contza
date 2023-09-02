@@ -7,31 +7,38 @@ type ImageElementAttributes = Omit<Partial<React.ImgHTMLAttributes<HTMLImageElem
 type ContzaImageProps = ImageElementAttributes & ContzaImage;
 
 export interface ImageProps extends ImageElementAttributes {
-    name: string;
-    children?: (image: ContzaImageProps) => JSX.Element;
+    name?: string;
+    children?: ((image: ContzaImageProps) => JSX.Element) | string;
 }
 
 const EditableImage = React.lazy(() => import("./EditableImage"));
 
 const Image = (props: ImageProps) => {
-    const { name, children } = props;
+    const { name, children, ...otherProps } = props;
+
+    const childrenIsFunction = children instanceof Function;
+    const fieldName = childrenIsFunction ? name : children ?? name;
+
+    if (!fieldName) {
+        throw "You must specify the name of the field by adding it to the 'children' or 'name' prop.";
+    }
 
     const { editMode } = useContza();
     const { registerField } = useContzaFields();
-    const { value } = registerField(name, "image");
+    const { value } = registerField(fieldName, "image");
 
     const imageProps: ContzaImageProps = {
-        ...(props as any),
-        children: undefined,
+        ...otherProps,
         src: value?.src,
         alt: value?.alt ?? "Image",
     };
 
-    const imageElement = children ? children(imageProps) : <img {...imageProps} />;
+    const imageElement =
+        children && childrenIsFunction ? children(imageProps) : <img {...imageProps} />;
 
     if (!editMode) return imageElement;
 
-    return <EditableImage name={name} children={imageElement} />;
+    return <EditableImage name={fieldName} children={imageElement} />;
 };
 
 export default Image;

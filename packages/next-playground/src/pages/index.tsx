@@ -45,7 +45,7 @@ const Home = () => {
                         </Link>
                     </div>
                     <div className="col-span-1 space-y-8">
-                        <ContzaImage name="Section image" className="shadow-2xl rounded-2xl" />
+                        <ContzaImage className="shadow-2xl rounded-2xl">Section image</ContzaImage>
                         <ContzaImage name="Section image 2" className="shadow-2xl rounded-2xl" />
                     </div>
                 </div>
