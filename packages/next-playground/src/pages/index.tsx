@@ -38,10 +38,11 @@ const Home = () => {
                                 <ContzaText>Section heading</ContzaText>
                             </li>
                         </ContzaList>
-                        <Link href="/blog" passHref={true}>
-                            <a className="inline-block text-center bg-black rounded-xl text-white px-4 py-2.5">
-                                Go to page
-                            </a>
+                        <Link
+                            href="/blog"
+                            className="inline-block text-center bg-black rounded-xl text-white px-4 py-2.5"
+                        >
+                            Go to page
                         </Link>
                     </div>
                     <div className="col-span-1 space-y-8">

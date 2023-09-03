@@ -10,9 +10,9 @@
         "prebuild": "yarn workspace @contza/client build && yarn workspace @contza/react build"
     },
     "dependencies": {
-        "@contza/react": "*",
         "@contza/client": "*",
-        "next": "12.3.0",
+        "@contza/react": "*",
+        "next": "13.3.4",
         "react": "18.2.0",
         "react-dom": "18.2.0"
     },

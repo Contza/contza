@@ -1,5 +1,5 @@
 import "../styles/tailwind.css";
-import { ContzaProvider } from "@contza/react";
+import { ContzaProvider } from "@contza/react/dist";
 import type { AppProps } from "next/app";
 
 const App = ({ Component, pageProps }: AppProps) => {

@@ -1,10 +1,10 @@
-import { useContza } from "../../providers/ContzaProvider";
-import { useInteraction } from "../../providers/InteractionProvider";
-import "./Image.css";
-import { ImageProps } from "./index";
 import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
+import { useContza } from "../../providers/ContzaProvider";
+import { useInteraction } from "../../providers/InteractionProvider";
 import { useContent } from "../../providers/ContentProvider";
+import { ImageProps } from "./index";
+import "./Image.css";
 
 export interface EditableImageProps extends Omit<ImageProps, "children"> {
     children: React.ReactNode;
