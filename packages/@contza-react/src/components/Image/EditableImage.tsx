@@ -7,6 +7,7 @@ import { ImageProps } from "./index";
 import "./Image.css";
 
 export interface EditableImageProps extends Omit<ImageProps, "children"> {
+    name: string;
     children: React.ReactNode;
 }
 
