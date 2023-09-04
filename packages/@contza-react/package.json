@@ -11,14 +11,13 @@
     ],
     "repository": {
         "type": "git",
-        "url": "git+https://github.com/Codetum/contza.git",
+        "url": "git+https://github.com/Contza/contza.git",
         "directory": "packages/@contza-react"
     },
     "publishConfig": {
         "access": "public"
     },
     "scripts": {
-        "dev": "rollup -c --watch",
         "build": "tsup",
         "prepublishOnly": "yarn build"
     },
