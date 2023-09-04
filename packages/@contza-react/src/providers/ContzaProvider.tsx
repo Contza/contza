@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from "react";
+import React, { useCallback, useContext, useEffect, useState } from "react";
 import { ContzaClient, ContzaContent } from "@contza/client";
 import { CONTZA_PRODUCTION_URL } from "../utils";
 import { ContzaEditorEvent } from "../types";
@@ -35,10 +35,10 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
     // Determine the Contza URL
     const contzaUrl = props.contzaUrl ?? CONTZA_PRODUCTION_URL;
 
-    // Store initialized ContzaClient to a reference.
+    // Store initialized ContzaClient to a state
     // The API handles the requests differently when the apiKey is "client"
-    const contzaClient = useRef<ContzaClient>(
-        new ContzaClient(props.websiteId, "client", { contzaUrl })
+    const [contzaClient] = useState(
+        () => new ContzaClient(props.websiteId, "client", { contzaUrl })
     );
 
     // State to track edit mode
@@ -56,7 +56,7 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
         [contzaUrl, editMode]
     );
 
-    // Listen for visual editor initialization
+    // Initialize Contza for visual editing
     useEffect(() => {
         const query = new URLSearchParams(window.location.search);
         const editMode =
@@ -79,7 +79,7 @@ export const ContzaProvider = (props: ContzaProviderProps) => {
                 editMode,
                 sendEditorEvent,
                 initialContents: props.initialContents ?? [],
-                contzaClient: contzaClient.current,
+                contzaClient,
                 contzaUrl,
             }}
         >
