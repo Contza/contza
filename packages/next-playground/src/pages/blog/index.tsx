@@ -1,4 +1,4 @@
-import { contza } from "../../utils/contza";
+import { contzaClient } from "../../utils/contzaClient";
 import { ContzaText, ContzaContent, ContentProvider } from "@contza/react";
 import { GetServerSideProps, NextPage } from "next";
 
@@ -8,8 +8,8 @@ const Blog: NextPage<{ content: ContzaContent; posts: ContzaContent[]; navbar: C
     navbar,
 }) => {
     return (
-        <ContentProvider content={content}>
-            <ContentProvider content={navbar}>
+        <ContentProvider initialContent={content}>
+            <ContentProvider initialContent={navbar}>
                 <div className="bg-black text-white font-medium text-lg">
                     <div className="section">
                         <div className="flex justify-center items-center space-x-4">
@@ -45,9 +45,9 @@ const Blog: NextPage<{ content: ContzaContent; posts: ContzaContent[]; navbar: C
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
     const locale = context.locale;
-    const content = await contza.findOne("blog", { locale });
-    const posts = await contza.findMany("blog", { locale });
-    const navbar = await contza.findOne("navbar", { locale });
+    const content = await contzaClient.findOne("blog", { locale });
+    const posts = await contzaClient.findMany("blog", { locale });
+    const navbar = await contzaClient.findOne("navbar", { locale });
 
     return {
         props: {

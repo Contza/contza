@@ -1,37 +1,44 @@
-import { useContza } from "../../providers/ContzaProvider";
-import { ContzaImage } from "../../types";
 import * as React from "react";
 import useContzaFields from "../../hooks/useContzaFields";
+import { useContza } from "../../providers/ContzaProvider";
+import { ContzaImage } from "../../types";
 
-type ImageElementAttributes = Omit<Partial<React.HTMLAttributes<HTMLImageElement>>, "children">;
-type ContzaImageElementAttributes = ImageElementAttributes & ContzaImage;
+type ImageElementAttributes = Omit<Partial<React.ImgHTMLAttributes<HTMLImageElement>>, "children">;
+type ContzaImageProps = ImageElementAttributes & ContzaImage;
 
-export interface ImageProps extends Omit<ImageElementAttributes, "children"> {
-    name: string;
-    children?: (image: ContzaImageElementAttributes) => JSX.Element;
+export interface ImageProps extends ImageElementAttributes {
+    name?: string;
+    children?: ((image: ContzaImageProps) => JSX.Element) | string;
 }
 
 const EditableImage = React.lazy(() => import("./EditableImage"));
 
 const Image = (props: ImageProps) => {
-    const { name, children } = props;
+    const { name, children, ...otherProps } = props;
+
+    const childrenIsFunction = children instanceof Function;
+    const fieldName = childrenIsFunction ? name : children ?? name;
+
+    if (!fieldName) {
+        throw "You must specify the name of the field by adding it to the 'children' or 'name' prop.";
+    }
 
     const { editMode } = useContza();
     const { registerField } = useContzaFields();
-    const { value } = registerField(name, "image");
+    const { value } = registerField(fieldName, "image");
 
-    const imageProps: ContzaImageElementAttributes = {
-        ...(props as any),
-        children: undefined,
+    const imageProps: ContzaImageProps = {
+        ...otherProps,
         src: value?.src,
         alt: value?.alt ?? "Image",
     };
 
-    const imageElement = children ? children(imageProps) : <img {...imageProps} />;
+    const imageElement =
+        children && childrenIsFunction ? children(imageProps) : <img {...imageProps} />;
 
     if (!editMode) return imageElement;
 
-    return <EditableImage name={name} children={imageElement} />;
+    return <EditableImage name={fieldName} children={imageElement} />;
 };
 
 export default Image;

@@ -2,12 +2,16 @@
     "name": "contza",
     "description": "Contza public packages.",
     "version": "1.0.0",
+    "license": "Apache-2.0",
     "private": true,
     "workspaces": [
         "packages/*"
     ],
     "scripts": {
-        "next-playground": "yarn workspace next-playground"
+        "build:client": "yarn workspace @contza/client build",
+        "build:react": "yarn build:client && yarn workspace @contza/react build",
+        "next-playground": "yarn workspace next-playground",
+        "react-playground": "yarn workspace react-playground"
     },
     "devDependencies": {
         "prettier": "^2.7.1"

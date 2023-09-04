@@ -1,26 +1,24 @@
 import {
+    ContzaClientOptions,
     ContzaContent,
     ContzaQueryCollectionOptions,
     ContzaQueryOptions,
-    ContzaSDKOptions,
 } from "./types";
-import { formatSlug } from "./utils";
+import { CONTZA_PRODUCTION_URL, formatSlug } from "./utils";
 
-const contzaApiUrl: string = "https://app.contza.com/api";
-
-export default class ContzaSDK {
+export class ContzaClient {
     private readonly websiteId: string;
     private readonly apiKey: string;
     private readonly apiUrl: string;
     private readonly defaultRequestHeaders: HeadersInit;
 
-    constructor(websiteId: string, apiKey: string, options?: ContzaSDKOptions) {
-        if (!websiteId) throw "Contza - websiteId was not specified";
-        if (!apiKey) throw "Contza - apiKey was not specified";
+    constructor(websiteId: string, apiKey: string, options?: ContzaClientOptions) {
+        if (!websiteId) throw "@contza/client - websiteId was not specified";
+        if (!apiKey) throw "@contza/client - apiKey was not specified";
 
         this.websiteId = websiteId;
         this.apiKey = apiKey;
-        this.apiUrl = options?.contzaUrl ?? contzaApiUrl;
+        this.apiUrl = (options?.contzaUrl ?? CONTZA_PRODUCTION_URL) + "/api";
         this.defaultRequestHeaders = {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -28,16 +26,16 @@ export default class ContzaSDK {
         };
     }
 
-    private async request<T>(method: "GET", endpoint: string): Promise<T> {
+    private async request<T>(endpoint: string): Promise<T> {
         const response = await fetch(this.apiUrl + endpoint, {
-            method,
+            method: "GET",
             headers: this.defaultRequestHeaders,
         });
 
         const data = await response.json();
 
         if (!response.ok) {
-            throw "Contza - " + (data.message ?? "Unknown error occurred");
+            throw "@contza/client - " + (data.message ?? "Unknown error occurred");
         }
 
         return data;
@@ -51,7 +49,7 @@ export default class ContzaSDK {
         const basePath = `/website/${this.websiteId}/content`;
         const endpoint = `${basePath}/${formatSlug(slug)}?${parameters.toString()}`;
 
-        return await this.request<ContzaContent>("GET", endpoint);
+        return await this.request<ContzaContent>(endpoint);
     }
 
     public async findMany(
@@ -66,7 +64,10 @@ export default class ContzaSDK {
         const basePath = `/website/${this.websiteId}/content`;
         const endpoint = `${basePath}/${formatSlug(slug)}?${parameters.toString()}`;
 
-        const contents = await this.request<ContzaContent[]>("GET", endpoint);
+        const contents = await this.request<ContzaContent[]>(endpoint);
+
         return contents ?? [];
     }
 }
+
+export * from "./types";

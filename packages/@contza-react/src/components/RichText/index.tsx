@@ -139,9 +139,7 @@ const RichText = (props: RichTextProps) => {
     const fieldName = children ?? name;
 
     if (!fieldName) {
-        throw new Error(
-            "You must specify the name of the field by adding it to the 'children' or 'name' prop."
-        );
+        throw "You must specify the name of the field by adding it to the 'children' or 'name' prop.";
     }
 
     const { editMode } = useContza();

@@ -1,17 +1,16 @@
 import * as React from "react";
-import useContzaFields from "../../hooks/useContzaFields";
 import { useContza } from "../../providers/ContzaProvider";
-import { parseHtml } from "../../utils";
+import useContzaFields from "../../hooks/useContzaFields";
 
-export interface TextProps {
+export interface RawTextProps {
     children?: string;
     name?: string;
     placeholder?: string;
 }
 
-const EditableText = React.lazy(() => import("./EditableText"));
+const EditableRawText = React.lazy(() => import("./EditableRawText"));
 
-const Text = (props: TextProps) => {
+const RawText = (props: RawTextProps) => {
     const { children, name, placeholder = `Enter ${children ?? name}...` } = props;
     const fieldName = children ?? name;
 
@@ -22,13 +21,12 @@ const Text = (props: TextProps) => {
     const { editMode } = useContza();
     const { registerField } = useContzaFields();
 
-    let { value } = registerField(fieldName, "text", fieldName);
+    let { value } = registerField(fieldName, "rawText", fieldName);
     value = value?.toString();
 
-    if (!editMode && value === "") return <>{fieldName}</>;
-    if (!editMode) return <>{parseHtml(value)}</>;
+    if (!editMode) return value;
 
-    return <EditableText name={fieldName} placeholder={placeholder} />;
+    return <EditableRawText name={fieldName} placeholder={placeholder} />;
 };
 
-export default Text;
+export default RawText;

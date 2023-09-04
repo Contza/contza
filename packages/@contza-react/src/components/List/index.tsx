@@ -17,7 +17,7 @@ const List = (props: ListProps) => {
     const { registerField } = useContzaFields();
     const { value = [] } = registerField(name, "list");
 
-    const isFunction = children instanceof Function;
+    const childrenIsFunction = children instanceof Function;
 
     return (
         <ListProvider name={name} path={[...parentList.path, name]}>
@@ -25,7 +25,9 @@ const List = (props: ListProps) => {
                 {value.map((listKey: string, index: number) => {
                     return (
                         <ListItem key={listKey} listName={name} listKey={listKey}>
-                            {isFunction ? (children(listKey, index) as React.ReactNode) : children}
+                            {childrenIsFunction
+                                ? (children(listKey, index) as React.ReactNode)
+                                : children}
                         </ListItem>
                     );
                 })}
