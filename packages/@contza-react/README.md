@@ -3,7 +3,7 @@
 </h3>
 
 <p align="center">
-  Typescript / Javascript SDK for Contza.
+  Contza components for React.
 </p>
 
 <p align="center">
